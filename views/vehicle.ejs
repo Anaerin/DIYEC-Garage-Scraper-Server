@@ -11,7 +11,7 @@
 			<% if (locals.vehicle.Images.length > 0) { %>
 			<fieldset class="Images"><legend>Images</legend>
 				<% for (image of locals.vehicle.Images) { -%>
-				<a href="/images/<%=image.id%>.jpg"><img src="/images/<%=image.id%>.jpg"></a>
+				<a href="/images/<%=image.id%>.jpg"><img src="/images/<%=image.id%>.jpg"><br /><%=image.title%></a>
 				<%_ } -%>
 			</fieldset><% } %>
 			<fieldset><legend>Vehicle Details</legend>
