@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include("partials/head") %>
+	</head>
+	<body>
+		<header>
+			<%- include("partials/header", { page: locals.page, pageCount: locals.pageCount }) %>
+		</header>
+		<div class="Content">
+			<table class="Vehicles">
+				<tr>
+					<th>Photo</th>
+					<th>User</th>
+					<th>Name</th>
+					<th>Year</th>
+					<th>Make</th>
+					<th>Model</th>
+					<th>Range</th>
+					<th>Power</th>
+					<th>Total Cost</th>
+					<th>Updated</th>
+					<th>Action</th>
+				</tr>
+			<%_ for (let vehicle of locals.vehicles) { -%>
+				<tr>
+				<%_ if (vehicle.Images && vehicle.Images.length > 0) { -%>
+					<td><img src="/images/<%=vehicle.Images[0].id%>.jpg" class="Thumbnail"></td>
+				<%_ } else { -%>
+					<td>&nbsp;</td>
+				<%_ } -%>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.builder%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.vehicleName%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.donorVehicleYear%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.donorVehicleMake%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.donorVehicleModel%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.rangeAt55%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.power%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=vehicle.totalCost%></a></td>
+				<td><a href="/vehicle/<%=vehicle.id%>"><%=new Date(vehicle.lastUpdated).toISOString().split("T")[0]%></a></td>
+				<td class="ShowButton"><a href="/vehicle/<%=vehicle.id%>"><b>Show</b></a></td>
+				</tr>
+			<%_ } -%>
+			</table>
+		</div>
+	</body>
+</html>

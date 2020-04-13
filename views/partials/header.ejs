@@ -1,0 +1,9 @@
+<div class="PageTitle">DIY Electric Car - Garage</div>
+<ul class="MenuBar">
+	<%_ for (let i = 1;i<locals.pageCount;i++) { -%>
+		<li<% if (locals.page == i) { -%>
+			class="Active"
+		<%_ } -%>><a href="/<%=i%>"><%=i%></a>
+	</li>
+	<%_ } -%>
+</ul>

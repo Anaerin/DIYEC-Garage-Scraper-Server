@@ -25,7 +25,9 @@ export class Vehicle extends Model {
 			pctComplete: DataTypes.INTEGER,
 			added: DataTypes.DATE,
 			lastUpdated: DataTypes.DATE,
-			donorVehicle: DataTypes.STRING,
+			donorVehicleYear: DataTypes.INTEGER,
+			donorVehicleMake: DataTypes.STRING,
+			donorVehicleModel: DataTypes.STRING,
 			donorCost: DataTypes.STRING,
 			conversionCost: DataTypes.STRING,
 			totalCost: DataTypes.STRING,
@@ -53,13 +55,13 @@ export class Vehicle extends Model {
 		}, { sequelize, modelName: "Vehicle"} );
 	}
 	static relation(models) {
-		this.hasMany(models.Images);
+		this.hasMany(models.Image);
 	}
 }
 models.Vehicle = Vehicle;
 models.Vehicle.init(sequelize);
 
-export class Images extends Model {
+export class Image extends Model {
 	static init(sequelize) {
 		super.init({
 			id: {
@@ -67,14 +69,14 @@ export class Images extends Model {
 				primaryKey: true
 			},
 			title: DataTypes.STRING
-		}, { sequelize, modelName: "Images"});
+		}, { sequelize, modelName: "Image"});
 	}
 	static relation(models) {
 		this.belongsTo(models.Vehicle);
 	}
 }
-models.Images = Images;
-models.Images.init(sequelize);
+models.Image = Image;
+models.Image.init(sequelize);
 for (let model in models) {
 	if (models[model].relation) models[model].relation(sequelize.models);
 }

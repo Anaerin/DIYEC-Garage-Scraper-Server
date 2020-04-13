@@ -1,9 +1,10 @@
 // Import externals
-import ArchiveRequest from './lib/archiverequest.js';
-import { Vehicle, Images } from "./db/index.js";
+import ArchiveRequest from "./lib/archiverequest.js";
+import { Vehicle, Image } from "./db/index.js";
 import Path from "path";
 import FS from "fs";
-import Axios from 'axios';
+import Axios from "axios";
+import Server from "./lib/web.js";
 const archiveRequest = new ArchiveRequest();
 const __dirname = Path.resolve();
 
@@ -39,12 +40,24 @@ async function main() {
 	const imageListRaw = await archiveRequest.getImageList();
 	// Parse the JSON list we just got and pare down duplicates
 	const imageList = archiveRequest.parseList(imageListRaw);
-	console.log("We can see", imageList.length, "images on the Wayback Machine's archive");
-	if (imageCount < imageList.length) {
+	const thumbListRaw = await archiveRequest.getThumbnailList();
+	const thumbList = archiveRequest.parseList(thumbListRaw);
+	let fullImageList = {};
+	for (const image of thumbList) {
+		const id = image.original.match(/(\d+)$/)[0];
+		fullImageList[id] = { original: image.original, timestamp: image.timestamp };
+	}
+	for (const image of imageList) {
+		const id = image.original.match(/(\d+$)/)[0];
+		fullImageList[id] = { original: image.original, timestamp: image.timestamp };
+	}
+	const fullImageLength = Object.keys(fullImageList).length;
+	console.log("We can see %s images on the Wayback Machine's archive (%s thumbnails, %s full images)", fullImageLength, imageList.length, thumbList.length);
+	if (imageCount < fullImageLength) {
 		console.log("Fetching Images");
 		// Nope. Better fetch those from the wayback machine, at least what we can.
 		fetchingImages = true;
-		await getImages(imageList);
+		await getImages(fullImageList);
 		fetchingImages = false;
 	}
 }
@@ -78,7 +91,9 @@ async function getVehicles(carList) {
 				pctComplete: carJSON.pct_Complete,
 				added: carJSON.Added,
 				lastUpdated: carJSON.Last_Updated,
-				donorVehicle: carJSON.Donor_Vehicle,
+				donorVehicleYear: carJSON.Donor_Vehicle.split(" ",3)[0],
+				donorVehicleMake: carJSON.Donor_Vehicle.split(" ",3)[1],
+				donorVehicleModel: carJSON.Donor_Vehicle.split(" ",3)[2],
 				donorCost: carJSON.Donor_Cost,
 				conversionCost: carJSON.Conversion_Cost,
 				totalCost: carJSON.Total_Cost,
@@ -109,7 +124,7 @@ async function getVehicles(carList) {
 			await vehicle.save();
 			if (carJSON.images) {
 				for (let image of carJSON.images) {
-					let [dbimage, created] = await Images.findOrCreate({ where: { id: image.imageID }});
+					let [dbimage, created] = await Image.findOrCreate({ where: { id: image.imageID }});
 					if (created) {
 						dbimage.id = image.imageID;
 						dbimage.title = image.imageTitle;
@@ -123,19 +138,20 @@ async function getVehicles(carList) {
 			console.log("Already got",id,", skipping");
 		}
 	}
+	console.log("Vehicle fetching complete");
 }
 async function getImages(imageList) {
 	// For each image
-	for (const image of imageList) {
+	for (const image in imageList) {
 		// Extract it's ID
-		const id = image.original.match(/(\d+)$/)[0];
+		const id = image;
 		// Build a filename for it
 		const fileName = Path.resolve(__dirname, "images", id + ".jpg");
 		// And if that file doesn't exist
 		console.log("Checking existence of file",fileName);
 		if (!FS.existsSync(fileName)) {
 			// Download the image.
-			await pipeData("https://web.archive.org/web/" + image.timestamp + "/" + image.original, fileName);
+			await pipeData("https://web.archive.org/web/" + imageList[image].timestamp + "/" + imageList[image].original, fileName);
 		}
 	}
 }
@@ -143,7 +159,7 @@ async function pipeData(url, fileName) {
 	// Create a write stream
 	const writer = FS.createWriteStream(fileName);
 	// Request the data from the server, as a stream
-	console.log("Fetching image $s", url);
+	console.log("Fetching image %s", url);
 	const response = await Axios({
 		url,
 		method: "GET",

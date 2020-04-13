@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include("partials/head") %>
+	</head>
+	<body>
+		<header>
+			<%- include("partials/header", { page: locals.page, pageCount: locals.pageCount }) %>
+		</header>
+		<div class="Content">
+			<% if (locals.vehicle.Images.length > 0) { %>
+			<fieldset class="Images"><legend>Images</legend>
+				<% for (image of locals.vehicle.Images) { -%>
+				<a href="/images/<%=image.id%>.jpg"><img src="/images/<%=image.id%>.jpg"></a>
+				<%_ } -%>
+			</fieldset><% } %>
+			<fieldset><legend>Vehicle Details</legend>
+				<div class="Label">Vehicle Name</div><div class="Value"><%=locals.vehicle.vehicleName%>&nbsp; </div>
+				<div class="Label">Builder</div><div class="Value"><%=locals.vehicle.builder%>&nbsp; </div>
+				<div class="Label">Donor Vehicle</div><div class="Value"><%=locals.vehicle.donorVehicleYear%> <%=locals.vehicle.donorVehicleMake%> <%=locals.vehicle.donorVehicleModel%>&nbsp;</div>
+				<div class="Label">Donor Cost</div><div class="Value"><%=locals.vehicle.donorCost%>&nbsp; </div>
+				<div class="Label">Conversion Cost</div><div class="Value"><%=locals.vehicle.conversionCost%>&nbsp; </div>
+				<div class="Label">Total Cost</div><div class="Value"><%=locals.vehicle.totalCost%>&nbsp; </div>
+				<div class="Label">Started</div><div class="Value"><%=new Date(locals.vehicle.started).toISOString().split("T")[0]%>&nbsp; </div>
+				<div class="Label"><% if (locals.vehicle.pctComplete == "100%") { %>Finished<% } else { %>Est. Finish<% } %></div><div class="Value"><%=new Date(locals.vehicle.estFinish).toISOString().split("T")[0]%>&nbsp; </div>
+				<div class="Label">Build Duration</div><div class="Value"><%=locals.vehicle.buildDuration%>&nbsp; </div>
+				<div class="Label">Build Hours</div><div class="Value"><%=locals.vehicle.buildHours%>&nbsp; </div>
+				<div class="Label">% Complete</div><div class="Value"><%=locals.vehicle.pctComplete%>&nbsp; </div>
+				<div class="Label">Added</div><div class="Value"><%=new Date(locals.vehicle.added).toISOString().split("T")[0]%>&nbsp; </div>
+				<div class="Label">Last Updated:</div><div class="Value"><%=new Date(locals.vehicle.lastUpdated).toISOString().split("T")[0]%>&nbsp; </div>
+				<% if (locals.vehicle.buildThread) { %><a href="<%=locals.vehicle.buildThread%>">Main Build Thread</a><% } %>
+			</fieldset>
+			<fieldset><legend>Performance and Range</legend>
+				<div class="Label">Max Power</div><div class="Value"><%=locals.vehicle.maxPower%>&nbsp; </div>
+				<div class="Label">Top Speed</div><div class="Value"><%=locals.vehicle.topSpeed%>&nbsp; </div>
+				<div class="Label">Acceleration</div><div class="Value"><%=locals.vehicle.acceleration%>&nbsp; </div>
+				<div class="Label">Final Weight</div><div class="Value"><%=locals.vehicle.finalWeight%>&nbsp; </div>
+				<div class="Label">Range at 30</div><div class="Value"><%=locals.vehicle.rangeAt30%>&nbsp; </div>
+				<div class="Label">Range at 55</div><div class="Value"><%=locals.vehicle.rangeAt55%>&nbsp; </div>
+			</fieldset>
+			<fieldset><legend>Batteries and Charging</legend>
+				<div class="Label">Battery Type</div><div class="Value"><%=locals.vehicle.batteryType%>&nbsp; </div>
+				<div class="Label">Battery Manufacturer</div><div class="Value"><%=locals.vehicle.batteryManufacturer%>&nbsp; </div>
+				<div class="Label">Battery Configuration</div><div class="Value"><%=locals.vehicle.batteryConfiguration%>&nbsp; </div>
+				<div class="Label">Battery Pack Voltage</div><div class="Value"><%=locals.vehicle.batteryPackVoltage%>&nbsp; </div>
+				<div class="Label">Charger</div><div class="Value"><%=locals.vehicle.charger%>&nbsp; </div>
+				<div class="Label">Charge Time</div><div class="Value"><%=locals.vehicle.chargeTime%>&nbsp; </div>
+			</fieldset>
+			<fieldset><legend>Drivetrain</legend>
+				<div class="Label">Controller</div><div class="Value"><%=locals.vehicle.controller%>&nbsp; </div>
+				<div class="Label">Motor</div><div class="Value"><%=locals.vehicle.motor%>&nbsp; </div>
+			</fieldset>
+			<fieldset><legend>Accessories</legend>
+				<div class="Label">DC-DC Converter</div><div class="Value"><%=locals.vehicle.dc2dcConverter%>&nbsp; </div>
+				<div class="Label">Air Conditioning</div><div class="Value"><%=locals.vehicle.airConditioning%>&nbsp; </div>
+				<div class="Label">Power Steering</div><div class="Value"><%=locals.vehicle.powerSteering%>&nbsp; </div>
+				<div class="Label">Brakes</div><div class="Value"><%=locals.vehicle.brakes%>&nbsp; </div>
+				<div class="Label">Tires</div><div class="Value"><%=locals.vehicle.tires%>&nbsp; </div>
+			</fieldset>
+			<fieldset><legend>Other Notes</legend>
+				<div><%=locals.vehicle.notes%>&nbsp; </div>
+			</fieldset>
+		</div>
+	</body>
+</html>
