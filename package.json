@@ -10,7 +10,7 @@
     "axios": "^0.21.2",
     "sequelize": "^5.21.6",
     "sqlite3": "^4.1.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "serve-static": "^1.14.1",
     "ejs": "^3.1.7"
   },
