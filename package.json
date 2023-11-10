@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "sequelize": "^6.29.0",
     "sqlite3": "^5.1.6",
     "express": "^4.17.3",
